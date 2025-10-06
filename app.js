@@ -4,7 +4,8 @@ let newGameBtn = document.querySelector("#new-btn");
 let msgContainer = document.querySelector(".msg-container");
 let msg = document.querySelector("#msg");
 
-let turnO = true; //playerX, playerO
+let turnO = true;
+let count = 0; //playerX, playerO
 
 const winPatterns = [
     [0,1,2],
@@ -19,6 +20,7 @@ const winPatterns = [
 
 const resetGame = () => {
     turnO = true;
+    count = 0;
     enableBoxes();
     msgContainer.classList.add("hide");
 };
@@ -34,10 +36,21 @@ boxes.forEach((box) => {
             turnO = true;
         }
         box.disabled=true;
+        count++;
 
-        checkWinner();
+        let isWinner = checkWinner();
+
+        if(count === 9 && !isWinner){
+            gameDraw();
+        }
     });
 });
+
+const gameDraw = () => {
+    msg.innerText = `Game was a Draw.`;
+    msgContainer.classList.remove("hide");
+    disableBoxes();
+}
 
 const disableBoxes = () => {
     for(let box of boxes){
@@ -73,6 +86,7 @@ const checkWinner = () => {
         if(pos1Val !="" && pos2Val != "" && pos3Val != ""){
             if(pos1Val === pos2Val && pos2Val === pos3Val){
                     showWinner(pos1Val);
+                    return true;
             }
         }
     }
